@@ -32,5 +32,10 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    Route::post('/jogos/{jogoId}/resultado', [JogoController::class, 'registrarResultado']);
+    Route::post('/campeonato/{camponatoId}/quartas', [CampeonatoController::class, 'sortearQuartas']);
+    Route::post('/campeonato/{camponatoId}/semi', [CampeonatoController::class, 'sortearSemi']);
+    Route::post('/campeonato/{camponatoId}/finais', [CampeonatoController::class, 'sortearFinais']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 });

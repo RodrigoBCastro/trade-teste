@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('time_visitante_id')->constrained('times');
             $table->integer('gols_time_casa')->default(0);
             $table->integer('gols_time_visitante')->default(0);
+            $table->enum('fase', ['quartas', 'semifinais', 'final', 'terceiro_lugar'])->default('quartas');
             $table->dateTime('data_jogo');
             $table->timestamps();
         });

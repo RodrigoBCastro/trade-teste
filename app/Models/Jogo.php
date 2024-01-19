@@ -14,6 +14,7 @@ class Jogo extends Model
         'time_visitante_id',
         'gols_time_casa',
         'gols_time_visitante',
+        'fase',
         'data_jogo',
     ];
 
@@ -30,5 +31,10 @@ class Jogo extends Model
     public function timeVisitante()
     {
         return $this->belongsTo(Time::class, 'time_visitante_id');
+    }
+
+    public function resultado()
+    {
+        return $this->hasOne(Resultado::class, 'jogo_id');
     }
 }
