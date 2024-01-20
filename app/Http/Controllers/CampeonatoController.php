@@ -31,7 +31,6 @@ class CampeonatoController extends Controller
         $data_fim = now()->addDays(30);
 
         $validatedData['data_inicio'] = $data_inicio;
-        $validatedData['data_fim'] = $data_fim;
 
         $campeonato = Campeonato::create($validatedData);
 
@@ -56,14 +55,9 @@ class CampeonatoController extends Controller
     {
     }
 
-    public function sortearSemi(Request $request, $campeonatoId)
+    public function verificarClassificacao(Request $request, $campeonatoId)
     {
-        $this->campeonatoService->sortearSemifinais($campeonatoId);
-    }
-
-    public function sortearFinais(Request $request, $campeonatoId)
-    {
-        $this->campeonatoService->sortearFinais($campeonatoId);
+        return $this->campeonatoService->verificarClassificacao($campeonatoId);
     }
 }
 

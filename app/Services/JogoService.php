@@ -44,6 +44,12 @@ class JogoService
                 case('semifinais'):
                     $this->campeonatoService->sortearFinais($jogo->campeonato_id);
                     break;
+                case('final'):
+                case('terceiro_lugar'):
+                    $this->campeonatoService->encerrarCampeonato($jogo->campeonato_id);
+                    break;
+                default:
+                    break;
             }
         }
 

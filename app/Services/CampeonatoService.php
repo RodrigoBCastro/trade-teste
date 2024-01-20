@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Campeonato;
 use App\Models\Resultado;
 use App\Models\Time;
 use App\Models\Jogo;
@@ -121,27 +122,51 @@ class CampeonatoService
     }
 
     public function verificaFaseSorteada($campeonatoId, $fase) {
-        $faseSorteada = Jogo::where('campeonato_id', $campeonatoId)
+        return Jogo::where('campeonato_id', $campeonatoId)
             ->where('fase', $fase)
             ->exists();
-
-        if (!$faseSorteada) {
-            return false;
-        }
-
-        return true;
     }
 
     public function verificarFaseFinalizada($campeonatoId, $fase) {
-        $jogos = Jogo::where('campeonato_id', $campeonatoId)
-            ->where('fase', $fase)
+        $fasesParaVerificar = ($fase == 'final' or $fase == 'terceiro_lugar')
+            ? ['final', 'terceiro_lugar']
+            : [$fase];
+
+        $jogosIncompletos = Jogo::where('campeonato_id', $campeonatoId)
+            ->whereIn('fase', $fasesParaVerificar)
             ->doesntHave('resultado')
             ->exists();
 
-        if ($jogos) {
-            return false;
-        }
-
-        return true;
+        return !$jogosIncompletos;
     }
+
+    public function encerrarCampeonato($campeonatoId) {
+        $campeonato = Campeonato::find($campeonatoId);
+        $campeonato->update([
+            'data_fim' => new \DateTime()
+        ]);
+
+        return $campeonato;
+    }
+
+    public function verificarClassificacao($campeonatoId) {
+        $campeonato = Campeonato::with(['jogos.resultado.vencedor', 'jogos.resultado.perdedor'])
+            ->findOrFail($campeonatoId);
+
+        $final = $campeonato->jogos()->where('fase', 'final')->first();
+        $disputaTerceiro = $campeonato->jogos()->where('fase', 'terceiro_lugar')->first();
+
+        $primeiroColocado = $final->resultado->vencedor->nome;
+        $segundoColocado = $final->resultado->perdedor->nome;
+        $terceiroColocado = $disputaTerceiro->resultado->vencedor->nome;
+        $quartoColocado = $disputaTerceiro->resultado->perdedor->nome;
+
+        return response()->json([
+            'primeiro' => $primeiroColocado,
+            'segundo' => $segundoColocado,
+            'terceiro' => $terceiroColocado,
+            'quarto' => $quartoColocado
+        ]);
+    }
+
 }
