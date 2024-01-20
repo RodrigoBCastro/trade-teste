@@ -16,20 +16,6 @@ export default function NewCampeonato() {
     const {setNotification} = useStateContext()
 
     useEffect(() => {
-        getTimes();
-    }, [])
-
-    const selectTime = (timeId) => {
-        setCampeonato(prevSelected => {
-            const newTimes = prevSelected.times.includes(timeId)
-                ? prevSelected.times.filter(id => id !== timeId)
-                : [...prevSelected.times, timeId];
-
-            return { ...prevSelected, times: newTimes };
-        });
-    };
-
-    const getTimes = () => {
         setLoading(true)
         axiosClient.get('/times')
             .then(({data}) => {
@@ -39,23 +25,40 @@ export default function NewCampeonato() {
             .catch(() => {
                 setLoading(false)
             })
-    }
+    }, [])
+
+    const selectTime = (timeId) => {
+        setCampeonato(prevSelected => {
+            if (prevSelected.times.includes(timeId)) {
+                return { ...prevSelected, times: prevSelected.times.filter(id => id !== timeId) };
+            } else if (prevSelected.times.length < 8) {
+                return { ...prevSelected, times: [...prevSelected.times, timeId] };
+            } else {
+                setErrors({ 'times': ['Não é possível selecionar mais de 8 times.'] });
+                setTimeout(() => setErrors(null), 3000); // Limpa a mensagem de erro após 3 segundos
+                return prevSelected;
+            }
+        });
+    };
 
     const onSubmit = ev => {
         ev.preventDefault();
-        if (campeonato.times.length === 8) {
-            axiosClient.post('/campeonatos', campeonato)
-                .then(({data}) => {
-                    setNotification('Campeonato was successfully created')
-                    navigate('/campeonatos')
-                })
-                .catch(err => {
-                    const response = err.response;
-                    if (response && response.status === 422) {
-                        setErrors(response.data.errors)
-                    }
-                })
+        if (campeonato.times.length !== 8) {
+            setErrors({ 'times': ['Exatamente 8 times devem ser selecionados.'] });
+            return;
         }
+
+        axiosClient.post('/campeonatos', campeonato)
+            .then(({data}) => {
+                setNotification('Campeonato criado com sucesso.');
+                navigate('/campeonatos');
+            })
+            .catch(err => {
+                const response = err.response;
+                if (response && response.status === 422) {
+                    setErrors(response.data.errors);
+                }
+            });
     };
 
     return (
@@ -90,7 +93,6 @@ export default function NewCampeonato() {
                     </form>
                 )}
             </div>
-
         </div>
     )
 }
