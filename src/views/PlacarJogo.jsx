@@ -19,7 +19,6 @@ export default function PlacarJogo() {
             axiosClient.get(`/jogos/${id}`)
                 .then(({data}) => {
                     setLoading(false)
-                    console.log(data);
                     setJogo(data);
                     setGolsCasa(data.gols_time_casa);
                     setGolsVisitante(data.gols_time_visitante);
@@ -30,7 +29,7 @@ export default function PlacarJogo() {
         }, [])
     }
 
-    const handleSubmit = (event) => {
+    const onSubmit = (event) => {
         event.preventDefault();
 
         const placar = {
@@ -65,7 +64,7 @@ export default function PlacarJogo() {
                     </div>
                 }
                 {!loading && jogo && (
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={onSubmit}>
                         <h2>{jogo.time_casa && jogo.time_casa.nome} VS {jogo.time_visitante && jogo.time_visitante.nome}</h2>
                         <div>
                             <label htmlFor="golsCasa">{jogo.time_casa && jogo.time_casa.nome}</label>

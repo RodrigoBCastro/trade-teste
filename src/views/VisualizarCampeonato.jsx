@@ -19,7 +19,6 @@ export default function VisualizarCampeonato() {
             axiosClient.get(`/campeonatos/${id}`)
                 .then(({data}) => {
                     setLoading(false)
-                    console.log(data);
                     setCampeonato(data);
                     setCarregouCampeonato(true);
                 })
@@ -33,7 +32,6 @@ export default function VisualizarCampeonato() {
                 axiosClient.get(`/campeonatos/${id}/resultado`)
                     .then(data => {
                         setLoading(false)
-                        console.log(data.data);
                         setClassificacao(data.data);
                     })
                     .catch(() => {

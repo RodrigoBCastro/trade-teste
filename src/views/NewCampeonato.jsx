@@ -46,6 +46,9 @@ export default function NewCampeonato() {
         if (campeonato.times.length !== 8) {
             setErrors({ 'times': ['Exatamente 8 times devem ser selecionados.'] });
             return;
+        } else if (campeonato.nome === '') {
+            setErrors({ 'nome': ['Voce deve preencher o nome do campeonato.'] });
+            return;
         }
 
         axiosClient.post('/campeonatos', campeonato)
