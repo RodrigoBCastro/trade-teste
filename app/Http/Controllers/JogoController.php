@@ -4,15 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Jogo;
 use App\Services\CampeonatoService;
+use App\Services\JogoService;
 use Illuminate\Http\Request;
 
 class JogoController extends Controller
 {
     protected $campeonatoService;
+    protected $jogoService;
 
-    public function __construct(CampeonatoService $campeonatoService)
+    public function __construct(CampeonatoService $campeonatoService, JogoService $jogoService)
     {
         $this->campeonatoService = $campeonatoService;
+        $this->jogoService = $jogoService;
     }
 
     public function index()
@@ -49,7 +52,7 @@ class JogoController extends Controller
         ]);
 
         // Chama o método do serviço para registrar o resultado do jogo
-        $resultado = $this->campeonatoService->registrarResultadoJogo($jogoId, $request->gols_time_casa, $request->gols_time_visitante);
+        $resultado = $this->jogoService->registrarResultadoJogo($jogoId, $request->gols_time_casa, $request->gols_time_visitante);
 
         // Verifica se o resultado foi registrado com sucesso
         if ($resultado) {

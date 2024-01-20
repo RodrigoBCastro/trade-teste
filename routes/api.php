@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::put('/jogos/{jogoId}/resultado', [JogoController::class, 'registrarResultado']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('campeonatos', CampeonatoController::class);
@@ -32,7 +33,6 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-    Route::put('/jogos/{jogoId}/resultado', [JogoController::class, 'registrarResultado']);
     Route::put('/campeonato/{camponatoId}/semi', [CampeonatoController::class, 'sortearSemi']); // Retirar apos automatizar
     Route::put('/campeonato/{camponatoId}/finais', [CampeonatoController::class, 'sortearFinais']); // Retirar apos automatizar
 
