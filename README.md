@@ -1,66 +1,98 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Documentação da API RESTful e Front-end React
 
-## About Laravel
+## 1. Introdução
+Esta API RESTful foi desenvolvida utilizando o framework Laravel 9 e é acompanhada de um front-end React. Ela permite aos usuários logados criar campeonatos com times em seus bairros. Somente é possível adicionar um limite de 8 times por campeonato. Após fazer login, você pode criar um campeonato, e os jogos das quartas de final serão sorteados automaticamente. Depois, você poderá registrar os placares para determinar os times vencedores. As semifinais, a final e o terceiro lugar são gerados automaticamente assim que uma fase anterior termina.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 2. Requisitos de Sistema
+- PHP 8.2
+- Composer
+- Laravel 9
+- MySQL
+- Node 20
+- Servidor web (Apache/Nginx)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 3. Configuração do Ambiente
+### Instalação do PHP, MySQL, e Node
+- Instale PHP 8.2, MySQL e Node 20 seguindo as instruções oficiais de cada plataforma.
+- Certifique-se de que o Composer (para PHP) e o NPM (para Node) estão instalados.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Configuração do Laravel
+- Utilize o Composer para instalar o Laravel 9.
+- Configure o arquivo `.env` com as credenciais do seu banco de dados MySQL e outras variáveis de ambiente necessárias.
+- `composer install`
 
-## Learning Laravel
+### Configuração do React
+- Utilize o NPM para criar um novo projeto React.
+- Configure o ambiente React para se comunicar com a API Laravel utilizando o Axios ou outro cliente HTTP.
+- `npm install`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Informação
+- Após toda a configuração, será possível acessar o localhost funcionando em http://localhost:3000. Através deste endereço, o front-end interagirá com o back-end. Lembre-se de que no arquivo .env, o VITE_API_BASE_URL deve estar configurado para http://localhost:8000.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 4. Estrutura do Projeto
+### Back-end (Laravel)
+- `app/`: Contém a lógica principal da aplicação.
+- `routes/api.php`: Define os endpoints da API.
+- `database/migrations/`: Contém as migrações do banco de dados.
+- `database/seeers/`: Contém as seeders para popular dados no banco.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Front-end (React)
+- `src/`: Contém os componentes React.
+- `public/`: Contém arquivos estáticos como HTML, CSS, e imagens.
+## 5. Configuração do Banco de Dados
 
-## Laravel Sponsors
+O sistema utiliza o framework Laravel para a configuração e gerenciamento do banco de dados. As tabelas do banco de dados são criadas e mantidas através de migrações, e os dados iniciais são populados usando seeders.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### Tabelas Principais
 
-### Premium Partners
+1. **Users**: Armazena os dados dos usuários para autenticação e gerenciamento de acesso.
+    - Campos principais incluem `id`, `name`, `email`, `password`, etc.
+    - Esta tabela é utilizada pelo sistema de autenticação do Laravel.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+2. **Campeonato**: Representa os campeonatos dentro do sistema.
+    - Contém informações como `id`, `nome`, `data_inicio`, `data_fim`.
+    - Cada campeonato pode ter vários jogos associados.
 
-## Contributing
+3. **Jogo**: Detalha os jogos individuais de cada campeonato.
+    - Inclui campos como `id`, `campeonato_id`, `time_casa_id`, `time_visitante_id`, `gols_time_casa`, `gols_time_visitante`, `fase`, `data_jogo`.
+    - Relaciona-se com as tabelas `Campeonato`, `Time`, e `Resultado`.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. **Time**: Armazena informações sobre os times participantes.
+    - Campos incluem `id`, `nome` entre outros.
+    - Times são associados aos jogos e campeonatos.
 
-## Code of Conduct
+5. **Resultado**: Registra os resultados dos jogos.
+    - Contém `id`, `jogo_id`, `vencedor_id`, `perdedor_id`.
+    - Está diretamente ligada à tabela `Jogo`.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Migrações e Seeders
 
-## Security Vulnerabilities
+- **Migrações**: São utilizadas para criar e modificar a estrutura das tabelas do banco de dados de forma controlada e versionada. Cada tabela mencionada acima é criada e gerenciada por suas respectivas migrações.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Seeders**: Utilizados para alimentar o banco de dados com dados iniciais para desenvolvimento e testes. Isso inclui a criação de usuários padrão, times de exemplo, e configurações iniciais de campeonatos.
 
-## License
+### Comandos Importantes
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- Para executar as migrações: `php artisan migrate`
+- Para popular o banco de dados com dados iniciais: `php artisan db:seed`
+
+## 6. Implementação da API
+### Endpoints
+- `GET /campeonatos` - Listar todos os campeonatos
+- `GET /campeonatos/{id}` - Obter detalhes de um campeonato
+- `POST /campeonatos` - Criar um novo campeonato, deve ser enviado um array junto com os Ids dos times.
+- `PUT /jogos/{id}/resultado` - Espera os atributos `gols_time_casa`,`gols_time_visitante` para poder gerar o resultado de um jogo.
+- `GET /campeonatos/{campeonatoId}/resultado` - Traz o resultado do 1 ao 4 colocado caso o campeonato tenha sido finalizado.
+
+### Autenticação
+- Utiliza o sistema de autenticação padrão do Laravel (Sanctum).
+- Requer que os usuários se autentiquem para acessar os endpoints.
+
+## 7. Desenvolvimento Front-end
+- Utiliza React para criar uma interface de usuário dinâmica.
+- Integra-se com a API Laravel para realizar operações CRUD nas tarefas.
+
+## 8. Segurança
+- Implementa autenticação de usuários.
+- Utiliza validações no lado do servidor para evitar injeções SQL e ataques XSS.
