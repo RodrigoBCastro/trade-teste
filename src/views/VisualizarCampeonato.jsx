@@ -7,6 +7,8 @@ export default function VisualizarCampeonato() {
     const navigate = useNavigate();
     let {id} = useParams();
     const [campeonato, setCampeonato] = useState([]);
+    const [carregouCampeonato, setCarregouCampeonato] = useState(false);
+    const [classificacao, setClassificacao] = useState([]);
     const [errors, setErrors] = useState(null)
     const [loading, setLoading] = useState(false);
     const {setNotification} = useStateContext()
@@ -19,11 +21,26 @@ export default function VisualizarCampeonato() {
                     setLoading(false)
                     console.log(data);
                     setCampeonato(data);
+                    setCarregouCampeonato(true);
                 })
                 .catch(() => {
                     setLoading(false)
                 })
         }, [])
+        useEffect(() => {
+            setLoading(true)
+            if (carregouCampeonato && campeonato.data_fim) {
+                axiosClient.get(`/campeonatos/${id}/resultado`)
+                    .then(data => {
+                        setLoading(false)
+                        console.log(data.data);
+                        setClassificacao(data.data);
+                    })
+                    .catch(() => {
+                        setLoading(false)
+                    })
+            }
+        }, [carregouCampeonato]);
     }
 
     return (
@@ -39,6 +56,15 @@ export default function VisualizarCampeonato() {
                         ))}
                     </div>
                 }
+                {!loading && campeonato.data_fim && (
+                    <div className="resultado-campeonato">
+                        <h1>Classificação Final</h1>
+                        <p>1º Colocado: {classificacao.primeiro}</p>
+                        <p>2º Colocado: {classificacao.segundo}</p>
+                        <p>3º Colocado: {classificacao.terceiro}</p>
+                        <p>4º Colocado: {classificacao.quarto}</p>
+                    </div>
+                )}
                 {!loading && (
                     <div className="visualizar-campeonato">
                         <h1 className="titulo-campeonato">{campeonato.nome}</h1>
