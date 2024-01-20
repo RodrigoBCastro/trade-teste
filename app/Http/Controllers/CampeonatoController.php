@@ -23,10 +23,29 @@ class CampeonatoController extends Controller
 
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'nome' => 'required|string|max:255',
+        ]);
+
+        $data_inicio = now();
+        $data_fim = now()->addDays(30);
+
+        $validatedData['data_inicio'] = $data_inicio;
+        $validatedData['data_fim'] = $data_fim;
+
+        $campeonato = Campeonato::create($validatedData);
+
+        $this->campeonatoService->sortearQuartasDeFinal($campeonato->id, $request->times);
+
+        return response()->json($campeonato, 201);
     }
 
     public function show($id)
     {
+        $campeonato = Campeonato::with(['jogos.timeCasa', 'jogos.timeVisitante', 'jogos.resultado', 'jogos.resultado.vencedor'])
+            ->findOrFail($id);
+
+        return response()->json($campeonato);
     }
 
     public function update(Request $request, $id)
@@ -35,11 +54,6 @@ class CampeonatoController extends Controller
 
     public function destroy($id)
     {
-    }
-
-    public function sortearQuartas(Request $request, $campeonatoId)
-    {
-        $this->campeonatoService->sortearQuartasDeFinal($campeonatoId);
     }
 
     public function sortearSemi(Request $request, $campeonatoId)

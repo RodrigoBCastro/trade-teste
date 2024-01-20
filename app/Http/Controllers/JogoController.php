@@ -27,6 +27,9 @@ class JogoController extends Controller
 
     public function show($id)
     {
+        $jogo = Jogo::with(['timeCasa', 'timeVisitante'])
+            ->findOrFail($id);
+        return response()->json($jogo);
     }
 
     public function update(Request $request, $id)
