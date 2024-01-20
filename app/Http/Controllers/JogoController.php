@@ -62,7 +62,6 @@ class JogoController extends Controller
                 'data' => $resultado
             ], 200);
         } else {
-            // Em caso de falha, retorne uma mensagem de erro
             return response()->json([
                 'success' => false,
                 'message' => 'Não foi possível registrar o resultado do jogo.'

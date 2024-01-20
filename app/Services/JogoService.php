@@ -15,8 +15,7 @@ class JogoService
         $this->campeonatoService = $campeonatoService;
     }
 
-    public function registrarResultadoJogo($jogoId, $golsTimeCasa, $golsTimeVisitante)
-    {
+    public function registrarResultadoJogo($jogoId, $golsTimeCasa, $golsTimeVisitante) {
         $jogo = Jogo::find($jogoId);
 
         $jogo->update([
@@ -56,8 +55,7 @@ class JogoService
         return $resultado;
     }
 
-    private function determinarVencedorEPerdedor($jogo, $golsTimeCasa, $golsTimeVisitante)
-    {
+    private function determinarVencedorEPerdedor($jogo, $golsTimeCasa, $golsTimeVisitante) {
         if ($golsTimeCasa > $golsTimeVisitante) {
             return (object)['vencedor' => $jogo->timeCasa, 'perdedor' => $jogo->timeVisitante];
         } elseif ($golsTimeVisitante > $golsTimeCasa) {
@@ -67,8 +65,7 @@ class JogoService
         }
     }
 
-    private function calcularPontuacao(Time $time)
-    {
+    private function calcularPontuacao(Time $time) {
         $pontos = 0;
 
         foreach ($time->jogosCasa as $jogo) {
@@ -84,8 +81,7 @@ class JogoService
         return $pontos;
     }
 
-    private function desempatarTimes(Time $time1, Time $time2)
-    {
+    private function desempatarTimes(Time $time1, Time $time2) {
         $pontuacaoTime1 = $this->calcularPontuacao($time1);
         $pontuacaoTime2 = $this->calcularPontuacao($time2);
 

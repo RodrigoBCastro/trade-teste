@@ -28,7 +28,6 @@ class CampeonatoController extends Controller
         ]);
 
         $data_inicio = now();
-        $data_fim = now()->addDays(30);
 
         $validatedData['data_inicio'] = $data_inicio;
 

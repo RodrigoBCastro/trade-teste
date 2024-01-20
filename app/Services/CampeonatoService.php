@@ -9,8 +9,7 @@ use App\Models\Jogo;
 
 class CampeonatoService
 {
-    public function sortearQuartasDeFinal($campeonatoId, $timeIds)
-    {
+    public function sortearQuartasDeFinal($campeonatoId, $timeIds) {
         if ($this->verificaFaseSorteada($campeonatoId, 'quartas')) {
             return 'As quartas de final já foram sorteadas.';
         }
@@ -33,8 +32,7 @@ class CampeonatoService
         return 'Quartas de final sorteadas com sucesso.';
     }
 
-    public function sortearSemifinais($campeonatoId)
-    {
+    public function sortearSemifinais($campeonatoId) {
         if (!$this->verificaFaseSorteada($campeonatoId, 'quartas')) {
             return 'Os jogos das quartas de final ainda não foram sorteados.';
         }
@@ -68,8 +66,7 @@ class CampeonatoService
         return $semifinais;
     }
 
-    public function sortearFinais($campeonatoId)
-    {
+    public function sortearFinais($campeonatoId) {
         if (!$this->verificarFaseFinalizada($campeonatoId, 'semifinais')) {
             return 'As semifinais ainda não foram concluídas.';
         }
@@ -99,8 +96,7 @@ class CampeonatoService
         return ['final' => $jogoFinal, 'terceiro_lugar' => $jogoTerceiroLugar];
     }
 
-    public function buscarResultadoFase($campeonatoId, $fase)
-    {
+    public function buscarResultadoFase($campeonatoId, $fase) {
         $jogos = Jogo::with('resultado.vencedor', 'resultado.perdedor')
             ->where('campeonato_id', $campeonatoId)
             ->where('fase', $fase)
@@ -168,5 +164,4 @@ class CampeonatoService
             'quarto' => $quartoColocado
         ]);
     }
-
 }
