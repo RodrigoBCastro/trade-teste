@@ -1,6 +1,9 @@
 
 # Documentação da API RESTful e Front-end React
 
+## Hospedado na nuvem para poder acessar e testar
+### http://35.198.56.21
+
 ## 1. Introdução
 Esta API RESTful foi desenvolvida utilizando o framework Laravel 9 e é acompanhada de um front-end React. Ela permite aos usuários logados criar campeonatos com times em seus bairros. Somente é possível adicionar um limite de 8 times por campeonato. Após fazer login, você pode criar um campeonato, e os jogos das quartas de final serão sorteados automaticamente. Depois, você poderá registrar os placares para determinar os times vencedores. As semifinais, a final e o terceiro lugar são gerados automaticamente assim que uma fase anterior termina.
 
